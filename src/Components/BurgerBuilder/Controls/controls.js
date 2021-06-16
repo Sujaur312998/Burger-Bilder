@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useState } from 'react'
 import { Card, CardBody, CardFooter, CardHeader, Button } from 'reactstrap'
 
 
@@ -16,9 +16,9 @@ const Controls = (props) => {
 
     const [items] = useState([
         { level: "Salad", type: "salad" },
-        { level: "Cheess", type: "cheess"},
+        { level: "Cheess", type: "cheess" },
         { level: "Meat", type: "meat" },
-    ]) 
+    ])
 
     return (
         <div className='container  ml-md-10' style={{
@@ -42,14 +42,14 @@ const Controls = (props) => {
                                 amount={item.amount}
                                 type={item.type}
                                 key={Math.random()}
-                                add={() => props.ingredientAdded(item.type) }
+                                add={() => props.ingredientAdded(item.type)}
                                 remove={() => props.ingredientRemoved(item.type)}
                             />
                         })
                     }
                 </CardBody>
                 <CardFooter><h5>Price: {props.price} BDT</h5></CardFooter>
-                    <Button disabled={props.purchasable} className='btn-suceess'onClick={props.togglebtn}>Order Now</Button>
+                <Button disabled={props.purchasable} style={{ backgroundColor: "#D70F64" }} onClick={props.togglebtn}>Order Now</Button>
 
             </Card>
         </div>

@@ -6,15 +6,22 @@
     color: white;
     font-size: 15px;
     margin-top: -20px;
+    margin-left: 12px;
 }
 
 .NavLink {
     text-decoration: none;
     color: white;
-    font-size: 25px;
+    font-size: 20px;
     margin-top: -25px;
+    margin-right:15px
 }
 
 .NavLink:hover {
     color: wheat;
+}
+
+.active{
+    text-shadow: 1px 1px gray;
+    color:wheat;
 }

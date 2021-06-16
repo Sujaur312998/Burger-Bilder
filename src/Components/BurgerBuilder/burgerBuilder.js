@@ -1,63 +1,34 @@
-import React, { useState, createContext } from 'react'
+import React, { useState } from 'react'
 import Burger from './Burger/burger'
 import Controls from './Controls/controls'
 import Summary from './Summary/summary'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap'
+import { useSelector ,useDispatch} from 'react-redux'
+import {addIngredient,removeIngredient,updatepurchasable} from '../redux/Order/orderAction'
 
-const INGREDIENT_PRICE = {
-    salad: 10,
-    cheess: 30,
-    meat: 80
-}
-export const amount = createContext()
 
-const BurgerBuilder = () => {
-    const [ingredient, setIngredient] = useState({
-        ingredient: [
-            { type: "salad", amount: 0 },
-            { type: "cheess", amount: 0 },
-            { type: "meat", amount: 0 },
-        ]
-    })
+const BurgerBuilder = (props) => {
+
     const [togglebtn, setTogglebtn] = useState(false)
-    const [totalPrice, setTotalPrice] = useState(60)
-    const [purchasable, setPurchasable] = useState(true)
+
+    const ingredient = useSelector(state => state.orderReducer)
+    const dispatch = useDispatch()
 
 
-    const updatePurchasable = (addAmount) => {
-        const sumary = addAmount.reduce((sum, element) => {
-            return sum + element.amount
-        }, 0)
-        setPurchasable(sumary === 0 ? true : false)
+    const addIngredients = (type) => {
+        dispatch(addIngredient(type))
+        dispatch(updatepurchasable())
     }
-
-    const addIngredient = (type) => {
-        const addAmount = [...ingredient.ingredient]
-        const newPrice = totalPrice + INGREDIENT_PRICE[type]
-        for (let item of addAmount) {
-            if (item.type === type) {
-                item.amount++
-            }
-        }
-        setIngredient({ ingredient: addAmount })
-        setTotalPrice(newPrice)
-        updatePurchasable(addAmount)
-    }
-    const removeIngredient = (type) => {
-        const addAmount = [...ingredient.ingredient]
-        const newPrice = totalPrice - INGREDIENT_PRICE[type]
-        for (let item of addAmount) {
-            if (item.type === type) {
-                if (item.amount <= 0) { return null };
-                item.amount--
-            }
-        }
-        setIngredient({ ingredient: addAmount })
-        setTotalPrice(newPrice)
-        updatePurchasable(addAmount)
+    const removeIngredients = (type) => {
+        dispatch(removeIngredient(type))
+        dispatch(updatepurchasable())
     }
     const toggleModal = () => {
         setTogglebtn(!togglebtn)
+    }
+
+    const handleCheckout = () => {
+        props.history.push("/checkout")
     }
 
     return (
@@ -65,11 +36,11 @@ const BurgerBuilder = () => {
             <div className='d-flex flex-md-row flex-column'>
                 <Burger ingredients={ingredient} />
                 <Controls
-                    ingredientAdded={(type) => addIngredient(type)}
-                    ingredientRemoved={(type) => removeIngredient(type)}
-                    price={totalPrice}
+                    ingredientAdded={(type) => addIngredients(type)}
+                    ingredientRemoved={(type) => removeIngredients(type)}
+                    price={ingredient.totalPrice}
                     togglebtn={toggleModal}
-                    purchasable={purchasable}
+                    purchasable={ingredient.purchasable}
                 />
             </div>
             <Modal isOpen={togglebtn}>
@@ -78,10 +49,10 @@ const BurgerBuilder = () => {
                     <Summary
                         ingredient={ingredient}
                     />
-                    <h5>Totol Price: {totalPrice}</h5>
+                    <h5>Totol Price: {ingredient.totalPrice}</h5>
                 </ModalBody>
                 <ModalFooter>
-                    <Button className="btn btn-success">Continue to Checkout</Button>
+                    <Button className="btn btn-success"style={{backgroundColor:"#D70F64"}} onClick={handleCheckout}>Continue to Checkout</Button>
                     <Button className="btn btn-secondary" onClick={toggleModal} >Cancel</Button>
                 </ModalFooter>
             </Modal>

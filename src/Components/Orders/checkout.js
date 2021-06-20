@@ -38,10 +38,11 @@ const Checkout = (props) => {
         const orders = {
             ...stores,
             ...values,
-            orderTime: new Date()
+            orderTime: new Date(),
+            userId: stores.userId
         }
 
-        axios.post("https://burger-builder-1344e-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json", orders)
+        axios.post("https://burger-builder-1344e-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?auth="+ stores.token, orders)
             .then(response => {
                 if (response.status === 200) {
                     setIsLoading(false)
@@ -75,7 +76,7 @@ const Checkout = (props) => {
                         onScreen: true
                     }
                 })
-                console.log(err)
+                //console.log(err)
             })
 
 

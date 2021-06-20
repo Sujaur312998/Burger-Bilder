@@ -28,26 +28,29 @@ export const restIngredient = (purchasable) => {
     }
 }
 
-export const loadOrders=(orders)=>{
-    return{
-        type:actionTypes.LOAD_ORDERS,
+export const loadOrders = (orders) => {
+    return {
+        type: actionTypes.LOAD_ORDERS,
         payload: orders
     }
 }
 
-export const faildLoadOrders=()=>{
-    return{
+export const faildLoadOrders = () => {
+    return {
         type: actionTypes.FAILED_LOAD_ORDERS,
     }
 }
 
-export const fetchOrders=()=>dispatch=>{
-    axios.get("https://burger-builder-1344e-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json")
-        .then(response=>{
+export const fetchOrders = (token,userId) => dispatch => {
+    
+    const queryPerameters='&orderBy="userId"&equalTo="'+userId+'"'
+
+    axios.get('https://burger-builder-1344e-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?auth=' + token+ queryPerameters)
+        .then(response => {
             dispatch(loadOrders(response.data))
         })
-        .catch(error=>{
-            console.log(error)
+        .catch(error => {
+            dispatch(faildLoadOrders())
         })
 }
 

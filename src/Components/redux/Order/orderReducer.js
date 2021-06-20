@@ -1,4 +1,6 @@
 import * as actionType from './orderActionType'
+import * as authActionType from '../Auth/authActionType'
+
 
 const INGREDIENT_PRICE = {
     salad: 10,
@@ -16,7 +18,11 @@ const initialState = {
     orderLoading: true,
     orderERR: false,
     totalPrice: 60,
-    purchasable: true
+    purchasable: true,
+    token: null,
+    userId: null,
+    authLoading: false,
+    authFaildMsg:null
 }
 
 export const orderReducer = (state = initialState, action) => {
@@ -83,6 +89,32 @@ export const orderReducer = (state = initialState, action) => {
                 orderLoading: false
             }
 
+//          Auth Cases...
+
+        case authActionType.AUTH_SUCCESS:
+            return{
+                ...state,
+                token:action.payload.token,
+                userId: action.payload.userId
+            }
+        case authActionType.AUTH_LOGOUT:
+            return{
+                ...state,
+                token:null,
+                userId: null,
+                authFaildMsg:null
+            }
+            case authActionType.AUTH_LOADING:
+                return{
+                    ...state,
+                    authLoading: action.payload
+                }
+            case authActionType.AUTH_FAILED:
+                //console.log(action.payload);
+                return{
+                    ...state,
+                    authFaildMsg:action.payload
+                }
         default:
             return state
     }
